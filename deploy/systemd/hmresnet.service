@@ -1,0 +1,19 @@
+[Unit]
+Description=HMResNet web prediction service
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+WorkingDirectory=/opt/hmresnet-web
+ExecStart=/home/ubuntu/anaconda3/envs/pytorch_stable/bin/python -m uvicorn backend.app:app --host 127.0.0.1 --port 8011 --no-server-header
+Restart=on-failure
+RestartSec=10
+TimeoutStopSec=30
+UMask=0077
+Environment=HMRESNET_DEVICE=cuda:0
+Environment=HMRESNET_MAX_CONCURRENT=1
+Environment=PYTHONUNBUFFERED=1
+
+[Install]
+WantedBy=multi-user.target

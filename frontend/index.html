@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>HMResNet · 金属抗性多标签预测</title>
+<style>
+body { margin:0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; color:#15201b; background:#f4f7f4; }
+header { padding:18px 24px; background:#112b20; color:white; }
+main { max-width:1040px; margin:24px auto; padding:0 18px; }
+section { background:white; border:1px solid #dbe6e0; padding:18px; margin:16px 0; }
+h1, h2 { margin:0 0 10px; }
+textarea { width:100%; height:170px; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size:13px; }
+.row { display:grid; grid-template-columns: 1fr 1fr; gap:12px; margin-top:12px; }
+.btn { cursor:pointer; border:1px solid #112b20; background:#112b20; color:white; padding:8px 12px; border-radius:4px; }
+.btn.alt { background:white; color:#112b20; }
+.out { margin-top:12px; padding:12px; background:#f3f8f4; border:1px solid #dce8df; white-space:pre-wrap; }
+small { color:#5b6862; }
+@media (max-width: 720px) { .row { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+<header><h1>HMResNet</h1><small>Metal-resistance multi-label prediction</small></header>
+<main>
+<section>
+<h2>输入序列</h2>
+<textarea id="fasta" placeholder=">seq_1
+MKKVIYFLCTGNSCRSQMAEGWAKKYLGDEWEVYSAGIEAHGLNPNAVKAMKEIGIDISNQTSDV"></textarea>
+<div class="row">
+<div><label>阈值 <input id="threshold" type="number" min="0.01" max="0.99" step="0.01" value="0.5" /></label></div>
+<div><label>Top K <input id="topk" type="number" min="1" max="23" value="5" /></label></div>
+</div>
+<div class="row" style="align-items:center;">
+<button class="btn" id="predict">预测</button>
+<button class="btn alt" id="example">载入示例</button>
+</div>
+</section>
+<section>
+<h2>结果</h2>
+<div class="out" id="result">点击“预测”查看结果</div>
+</section>
+</main>
+<script>
+const example = ">arsenic_transport_ATPase\nMELTVVKERKKQAEERSEKNVVYRTKNLNLWYGEHHALKNIDLDIYENEVTAIIGPSGCGKSTYIKTLNRMIELVPSVRTSGEITYRGRNIFDKSYRVEELRTQVGMVFQKPNPFPKSIYDNVAYGPRIHGIRDKKILDEIVERSLRGAAIWDEVKDRLHGELSGGQKQRVAIARALAMEPDILLLDEPTAALDPEMRAEMREVIRELGKTVVIITHDLGNEAAMKQADRVLILNGK\n>nickel_cobalt_candidate\nMSRLYTEQLSIAYGERVIVDRLTVHIPDEKITTIIGPNGCGKSTLLKAMTRIIRHQEGAVILDGKQISQEHTKLLAQKMAILPQTPESPGGLTVGELVSYGRFPYQKGFGRLTKRDYEVIDWALEVTGTIEFKHRSVDSLSGGQRQRVWIAMALAQETDIIVLDEPTAALDPEMRAEMRDLIRELGKTVVIITHDLGNEAAMKQADRVLILNGK";
+document.getElementById('example').addEventListener('click', () => { document.getElementById('fasta').value = example; });
+document.getElementById('predict').addEventListener('click', async () => {
+  const result = document.getElementById('result');
+  result.textContent = '正在请求...';
+  try {
+    const res = await fetch('/api/predict', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({
+        fasta: document.getElementById('fasta').value,
+        threshold: parseFloat(document.getElementById('threshold').value),
+        top_k: parseInt(document.getElementById('topk').value, 10),
+      }),
+    });
+    const data = await res.json();
+    if (!res.ok) {
+      result.textContent = `Error ${res.status}: ${JSON.stringify(data, null, 2)}`;
+      return;
+    }
+    const lines = [];
+    lines.push(`Device: ${data.metadata.device}`);
+    lines.push(`Runtime ms: ${data.metadata.runtime_ms}`);
+    for (const p of data.predictions) {
+      lines.push(`[${p.id}] original_length=${p.original_length} model_length=${p.model_length}`);
+      lines.push(`Positive labels: ${(p.labels || []).map(x => `${x.label}=${x.probability}`).join(', ') || '(none)'}`);
+      lines.push(`Top scores: ${(p.top_scores || []).map(x => `${x.label}=${x.probability}`).join(', ') || '(none)'}`);
+    }
+    result.textContent = lines.join('\n');
+  } catch (err) {
+    result.textContent = `Request failed: ${err}`;
+  }
+});
+</script>
+</body>
+</html>

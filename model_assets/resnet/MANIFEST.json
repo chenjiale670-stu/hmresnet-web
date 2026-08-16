@@ -1,0 +1,22 @@
+{
+  "source_doi": "10.5281/zenodo.14600722",
+  "source_record": "https://zenodo.org/records/14600722",
+  "source_archive": {
+    "name": "code.zip",
+    "size_bytes": 522231243,
+    "md5": "ccc5e276e60637928e81e0105e1b3dc7"
+  },
+  "files": {
+    "best_model.pth": {
+      "sha256": "7eed68bb2afbdb2f885a63fef9d47bb0ffef03a2e56d0adfba7a52786a2be0fc",
+      "purpose": "ResNet-1D inference checkpoint"
+    },
+    "labels.json": {
+      "purpose": "JSON export of the published MultiLabelBinarizer classes"
+    },
+    "amino_acid_to_index.json": {
+      "purpose": "JSON export of the published amino-acid vocabulary"
+    }
+  },
+  "note": "The Zenodo record page did not display an explicit license when checked on 2026-08-16. Verify redistribution terms before public release."
+}
