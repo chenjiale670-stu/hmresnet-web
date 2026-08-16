@@ -68,13 +68,21 @@ vocabulary artifacts, and writes JSON replacements for labels and vocabulary.
 
 ## Deployment
 
-Use the files in deploy/tencent-cloud/ as a starting point.
-The recommended pattern is:
+The live deployment uses the existing Tencent Cloud relay and is available at:
+
+```text
+https://fgaresnet.duckdns.org/hmresnet/
+```
+
+The existing FGA-DB route at `/` is left untouched. The deployment pattern is:
 
 - Tencent Cloud Nginx on 80/443
-- NPS/NPC tunnel back to the GPU host
-- local gateway and prediction service on loopback
-- DuckDNS for the public hostname
+- SSH reverse tunnel from the GPU host to Tencent Cloud loopback port 18012
+- local CUDA prediction service on `127.0.0.1:8011`
+- DuckDNS for the existing public hostname
+
+See `deploy/tencent-cloud/deploy.md` and
+`deploy/tencent-cloud/nginx/hmresnet-path.conf` for the exact configuration.
 
 
 ## Release notes
