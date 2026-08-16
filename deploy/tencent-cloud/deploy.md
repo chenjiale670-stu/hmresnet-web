@@ -1,9 +1,9 @@
 # Tencent Cloud + DuckDNS deployment
 
-The existing public route at `106.54.36.145` currently serves the FGA-DB
-application through `127.0.0.1:18000`. Do not replace that route while testing
-HMResNet. Use a separate local port and a separate DuckDNS name, for example
-`hmresnet.duckdns.org`.
+The existing public route at `https://fgaresnet.duckdns.org` serves FGA-DB
+through `127.0.0.1:18000`. HMResNet is mounted alongside it at
+`https://fgaresnet.duckdns.org/hmresnet/`; the existing root route is left
+unchanged.
 
 1. On the GPU host, clone this repository and run the prediction API on an
    unused loopback port:
@@ -14,16 +14,27 @@ HMResNet. Use a separate local port and a separate DuckDNS name, for example
    python -m uvicorn backend.app:app --host 127.0.0.1 --port 8011 --forwarded-allow-ips=127.0.0.1
    ```
 
-2. Add an NPS TCP tunnel that maps a Tencent Cloud loopback port to
-   `127.0.0.1:8011` on the GPU host. Keep the Tencent-side listener bound to
-   `127.0.0.1`; it does not need a public security-group rule.
+2. Keep a persistent SSH reverse tunnel from the GPU host to Tencent Cloud.
+   The included user service `deploy/systemd/hmresnet-reverse-tunnel.service`
+   maps Tencent loopback port `18012` to local `127.0.0.1:8011`:
 
-3. Configure Nginx on the Tencent Cloud server with the example in
-   `nginx/hmresnet.conf`, replacing the hostname and internal NPS port with the
-   values created for this tunnel.
+   ```bash
+   cp deploy/systemd/hmresnet-reverse-tunnel.service \
+      ~/.config/systemd/user/
+   systemctl --user daemon-reload
+   systemctl --user enable --now hmresnet-reverse-tunnel.service
+   ```
 
-4. Point the new DuckDNS A record to `106.54.36.145`, issue the certificate,
-   then reload Nginx. DuckDNS supplies DNS only; Nginx owns ports 80/443.
+   The SSH key referenced by the service must be readable by the account that
+   runs the service. The Tencent-side listener remains on `127.0.0.1` and does
+   not need a public security-group rule.
+
+3. Add the `/hmresnet/` locations from `nginx/hmresnet-path.conf` to the HTTPS
+   server block for `fgaresnet.duckdns.org`, proxying to
+   `http://127.0.0.1:18012/`.
+
+4. No new DuckDNS record or certificate is required. Reload Nginx after the
+   location is added. DuckDNS supplies DNS only; Nginx owns ports 80/443.
 
 5. Verify from the GPU host first:
 

@@ -7,6 +7,14 @@ if [ -z "$repo" ]; then
   exit 1
 fi
 
-gh repo create "$repo" --private --source=. --remote=origin --push || \
-gh repo create "$repo" --public --source=. --remote=origin --push
+if command -v gh >/dev/null 2>&1; then
+  gh repo create "$repo" --private --source=. --remote=origin --push
+  exit 0
+fi
 
+if git remote get-url origin >/dev/null 2>&1; then
+  git push -u origin main
+else
+  git remote add origin "git@github.com:${repo}.git"
+  git push -u origin main
+fi

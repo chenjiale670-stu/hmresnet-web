@@ -1,0 +1,22 @@
+[Unit]
+Description=HMResNet SSH reverse tunnel to Tencent Cloud
+After=network-online.target hmresnet.service
+Wants=network-online.target
+Requires=hmresnet.service
+
+[Service]
+Type=simple
+Restart=always
+RestartSec=5
+ExecStart=/usr/bin/ssh -N -T \
+  -o BatchMode=yes \
+  -o ExitOnForwardFailure=yes \
+  -o ServerAliveInterval=30 \
+  -o ServerAliveCountMax=3 \
+  -o StrictHostKeyChecking=accept-new \
+  -i /home/ubuntu/.ssh/hotmail.pem \
+  -R 127.0.0.1:18012:127.0.0.1:8011 \
+  ubuntu@106.54.36.145
+
+[Install]
+WantedBy=default.target

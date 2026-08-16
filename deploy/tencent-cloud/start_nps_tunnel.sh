@@ -1,0 +1,32 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+TUNNEL_ID="${1:?usage: start_nps_tunnel.sh <tunnel-id>}"
+NPS_BASE="${NPS_BASE:-http://127.0.0.1:8080}"
+cookie="$(mktemp)"
+trap 'rm -f "$cookie"' EXIT
+
+username="$(sudo -n awk -F= '/^web_username[[:space:]]*=/{gsub(/[[:space:]]/,"",$2); print $2}' /etc/nps/conf/nps.conf)"
+password="$(sudo -n awk -F= '/^web_password[[:space:]]*=/{gsub(/[[:space:]]/,"",$2); print $2}' /etc/nps/conf/nps.conf)"
+
+login_response="$(curl -sS --max-time 10 -c "$cookie" -b "$cookie" -X POST \
+  --data-urlencode "username=$username" \
+  --data-urlencode "password=$password" \
+  "$NPS_BASE/login/verify")"
+python3 - "$login_response" <<'PY'
+import json
+import sys
+if not json.loads(sys.argv[1]).get("status"):
+    raise SystemExit("NPS login rejected")
+PY
+
+response="$(curl -sS --max-time 10 -c "$cookie" -b "$cookie" -X POST \
+  --data-urlencode "id=$TUNNEL_ID" "$NPS_BASE/index/start")"
+python3 - "$response" <<'PY'
+import json
+import sys
+data = json.loads(sys.argv[1])
+print({key: data.get(key) for key in ("status", "msg", "id")})
+if not data.get("status"):
+    raise SystemExit("NPS tunnel start rejected")
+PY

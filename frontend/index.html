@@ -47,7 +47,8 @@ document.getElementById('predict').addEventListener('click', async () => {
   const result = document.getElementById('result');
   result.textContent = '正在请求...';
   try {
-    const res = await fetch('/api/predict', {
+    const apiRoot = window.location.pathname.startsWith('/hmresnet') ? '/hmresnet' : '';
+    const res = await fetch(apiRoot + '/api/predict', {
       method: 'POST',
       headers: {'Content-Type': 'application/json'},
       body: JSON.stringify({
