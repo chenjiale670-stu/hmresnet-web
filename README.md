@@ -27,6 +27,23 @@ This is a screening tool, not a replacement for experimental validation.
 - Prediction website: <https://fgaresnet.duckdns.org/hmresnet/>
 - Zenodo record: <https://doi.org/10.5281/zenodo.14600722>
 
+## How to cite
+
+If you use the model or prediction service, please cite the associated article:
+
+> Chen, J., Gao, X., Zhang, C., & Ge, Y. (2025). Rapid identification of metal
+> resistance genes using an enhanced ResNet deep learning model trained on a
+> largely expanded BacMet-based database. *Journal of Hazardous Materials*,
+> 497, 139625. https://doi.org/10.1016/j.jhazmat.2025.139625
+
+Please also cite the released software and model record:
+
+> Chen, Jiale. (2025). *Rapid Identification of Metal Resistance Genes Using
+> Enhanced ResNet Deep Learning Model*. Zenodo. https://doi.org/10.5281/zenodo.14600722
+
+The scope of the repository license is documented in `LICENSE` and
+`THIRD_PARTY_NOTICES.md`.
+
 
 ## Local setup
 

@@ -1,0 +1,36 @@
+cff-version: 1.2.0
+message: "If you use this software or model, please cite the article and Zenodo record below."
+title: "HMResNet Web"
+version: "0.1.0"
+date-released: "2026-08-17"
+license: MIT
+repository-code: "https://github.com/chenjiale670-stu/hmresnet-web"
+url: "https://fgaresnet.duckdns.org/hmresnet/"
+authors:
+  - family-names: Chen
+    given-names: Jiale
+preferred-citation:
+  type: article
+  title: "Rapid identification of metal resistance genes using an enhanced ResNet deep learning model trained on a largely expanded BacMet-based database"
+  authors:
+    - family-names: Chen
+      given-names: Jiale
+    - family-names: Gao
+      given-names: Xianli
+    - family-names: Zhang
+      given-names: Chunhua
+    - family-names: Ge
+      given-names: Ying
+  journal: "Journal of Hazardous Materials"
+  volume: 497
+  year: 2025
+  article-number: 139625
+  doi: "10.1016/j.jhazmat.2025.139625"
+references:
+  - type: dataset
+    title: "Rapid Identification of Metal Resistance Genes Using Enhanced ResNet Deep Learning Model"
+    authors:
+      - family-names: Chen
+        given-names: Jiale
+    year: 2025
+    doi: "10.5281/zenodo.14600722"
