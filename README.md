@@ -4,6 +4,9 @@ HMResNet Web
 [Online prediction website](https://fgaresnet.duckdns.org/hmresnet/) ·
 [Zenodo source record](https://doi.org/10.5281/zenodo.14600722)
 
+[![MIT License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
+[![Zenodo DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.14600722.svg)](https://doi.org/10.5281/zenodo.14600722)
+
 Protein metal-resistance multi-label prediction service based on the Zenodo record
 [10.5281/zenodo.14600722](https://doi.org/10.5281/zenodo.14600722).
 
@@ -43,6 +46,13 @@ Please also cite the released software and model record:
 
 The scope of the repository license is documented in `LICENSE` and
 `THIRD_PARTY_NOTICES.md`.
+
+## License
+
+The original application, integration, user-interface, and deployment code in
+this repository is released under the [MIT License](LICENSE). The MIT License
+does not automatically apply to the model weights, `vendor/zenodo/`, or other
+third-party material; see [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md).
 
 
 ## Local setup
