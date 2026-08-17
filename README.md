@@ -1,8 +1,11 @@
 
 HMResNet Web
 
+[Online prediction website](https://fgaresnet.duckdns.org/hmresnet/) ·
+[Zenodo source record](https://doi.org/10.5281/zenodo.14600722)
+
 Protein metal-resistance multi-label prediction service based on the Zenodo record
-doi:10.5281/zenodo.14600722.
+[10.5281/zenodo.14600722](https://doi.org/10.5281/zenodo.14600722).
 
 
 ## Features
@@ -18,6 +21,11 @@ doi:10.5281/zenodo.14600722.
 
 The ResNet-1D model scores each protein sequence against 23 metal categories.
 This is a screening tool, not a replacement for experimental validation.
+
+## Links
+
+- Prediction website: <https://fgaresnet.duckdns.org/hmresnet/>
+- Zenodo record: <https://doi.org/10.5281/zenodo.14600722>
 
 
 ## Local setup
